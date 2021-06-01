@@ -1,0 +1,424 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Node.js Socket.io Chat Application</title>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+    <script src="https://code.jquery.com/jquery-3.6.0.js"
+        integrity="sha256-H+K7U5CnXl1h5ywQfKtSj8PCmoN9aaq30gDh27Xc0jk=" crossorigin="anonymous"></script>
+    <!-- <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/2.0.4/socket.io.js" type="text/js"></script> -->
+    <script src="/socket.io/socket.io.js"></script>
+    <link rel="stylesheet" href="styles.css" />
+</head>
+
+<body>
+
+    <div class="my-frame ">
+        <% stations.forEach(function(station) { %>
+            <form class="station" id='<%=station.id%>'>
+                <h2>Station <%=station.id%>
+                </h2>
+                <h4>
+                    <span>Status:</span>
+                    <div id="status<%=station.id%>" style="display: inline-block">-</div>
+                </h4>
+                <!-- Text input-->
+                <div class="form-group">
+                    <div class="inputGroupContainer">
+                        <div class="input-group">
+                            <input name="stationId" placeholder="ID" class="form-control" type="hidden"
+                                value="<%=station.id%>">
+                        </div>
+                        <div>
+                            <span>Programmer:</span>
+                            <div id='pname<%=station.id%>' style="display: inline-block">-</div>
+                        </div>
+                        <div>
+                            <span>Operator:</span>
+                            <div id='oname<%=station.id%>' style="display: inline-block">-</div>
+                        </div>
+                        <div>
+                            <span>Up Time:</span>
+                            <div id='timer<%=station.id%>' style="display: inline-block">-</div>
+                        </div>
+
+                        <!-- <div class="input-group">
+                            <span class="input-group-addon"><i class="glyphicon glyphicon-user"></i></span>
+                            <input name="programmerName" placeholder="Programmer Name" class="form-control" type="text"
+                                value="<%=station.programmerName%>">
+                        </div>
+                        <div class="input-group">
+                            <span class="input-group-addon"><i class="glyphicon glyphicon-user"></i></span>
+                            <input name="operatorName" placeholder="Operator Name" class="form-control" type="text"
+                                value="<%=station.operatorName%>">
+                        </div> -->
+                    </div>
+                </div>
+                <button type="submit" class="btn btn-primary" id="expandBtn<%=station.id%>">Expand</button>
+                <button type="submit" class="btn btn-danger" style="visibility: hidden;" id="stopBtn<%=station.id%>"
+                    disabled>Stop</button>
+                <button type="submit" class="btn btn-success" style="visibility: hidden;"
+                    id="startBtn<%=station.id%>">Start</button>
+
+            </form>
+            <% }); %>
+    </div>
+
+    <!-- <form id="myForm">
+        <button type="submit" class="btn btn-primary" id='btn2'>Register</button>
+    </form> -->
+
+    <div class="container">
+
+        <form class="well form-horizontal" id="detailForm">
+
+            <!-- Form Name -->
+            <legend id="stationName">Contact Us Today!</legend>
+
+
+            <!-- Text input-->
+
+            <div class="form-group">
+                <label class="col-md-4 control-label">Programmer Name</label>
+                <div class="col-md-4 inputGroupContainer">
+                    <div class="input-group">
+                        <span class="input-group-addon"><i class="glyphicon glyphicon-user"></i></span>
+                        <input id="programmer_name" name="programmer_name" placeholder="Programmer Name"
+                            class="form-control" type="text">
+                    </div>
+                </div>
+            </div>
+
+            <!-- Text input-->
+            <div class="form-group">
+                <label class="col-md-4 control-label">Operator Name</label>
+                <div class="col-md-4 inputGroupContainer">
+                    <div class="input-group">
+                        <span class="input-group-addon"><i class="glyphicon glyphicon-user"></i></span>
+                        <input name="operator_name" id="operator_name" placeholder="Operator Name" class="form-control"
+                            type="text">
+                    </div>
+                </div>
+            </div>
+
+            <input id="stationId" type="hidden" name='stationId'>
+
+            <!-- Select Basic -->
+
+            <div class="form-group">
+                <label class="col-md-4 control-label">Shift Start</label>
+                <div class="col-md-4 selectContainer">
+                    <div class="input-group">
+                        <span class="input-group-addon"><i class="glyphicon glyphicon-time"></i></span>
+                        <select name="shift_start" class="form-control selectpicker">
+                            <option value="00:00">12.00 AM</option>
+                            <option value="00:30">12.30 AM</option>
+                            <option value="01:00">01.00 AM</option>
+                            <option value="01:30">01.30 AM</option>
+                            <option value="02:00">02.00 AM</option>
+                            <option value="02:30">02.30 AM</option>
+                            <option value="03:00">03.00 AM</option>
+                            <option value="03:30">03.30 AM</option>
+                            <option value="04:00">04.00 AM</option>
+                            <option value="04:30">04.30 AM</option>
+                            <option value="05:00">05.00 AM</option>
+                            <option value="05:30">05.30 AM</option>
+                            <option value="06:00">06.00 AM</option>
+                            <option value="06:30">06.30 AM</option>
+                            <option value="07:00" selected="">07.00 AM</option>
+                            <option value="07:30">07.30 AM</option>
+                            <option value="08:00">08.00 AM</option>
+                            <option value="08:30">08.30 AM</option>
+                            <option value="09:00">09.00 AM</option>
+                            <option value="09:30">09.30 AM</option>
+                            <option value="10:00">10.00 AM</option>
+                            <option value="10:30">10.30 AM</option>
+                            <option value="11:00">11.00 AM</option>
+                            <option value="11:30">11.30 AM</option>
+                            <option value="12:00">12.00 PM</option>
+                            <option value="12:30">12.30 PM</option>
+                            <option value="13:00">01.00 PM</option>
+                            <option value="13:30">01.30 PM</option>
+                            <option value="14:00">02.00 PM</option>
+                            <option value="14:30">02.30 PM</option>
+                            <option value="15:00">03.00 PM</option>
+                            <option value="15:30">03.30 PM</option>
+                            <option value="16:00">04.00 PM</option>
+                            <option value="16:30">04.30 PM</option>
+                            <option value="17:00">05.00 PM</option>
+                            <option value="17:30">05.30 PM</option>
+                            <option value="18:00">06.00 PM</option>
+                            <option value="18:30">06.30 PM</option>
+                            <option value="19:00">07.00 PM</option>
+                            <option value="19:30">07.30 PM</option>
+                            <option value="20:00">08.00 PM</option>
+                            <option value="20:30">08.30 PM</option>
+                            <option value="21:00">09.00 PM</option>
+                            <option value="21:30">09.30 PM</option>
+                            <option value="22:00">10.00 PM</option>
+                            <option value="22:30">10.30 PM</option>
+                            <option value="23:00">11.00 PM</option>
+                            <option value="23:30">11.30 PM</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+
+
+            <div class="form-group">
+                <label class="col-md-4 control-label">Shift End</label>
+                <div class="col-md-4 selectContainer">
+                    <div class="input-group">
+                        <span class="input-group-addon"><i class="glyphicon glyphicon-time"></i></span>
+                        <select name="shift_end" class="form-control selectpicker">
+                            <option value="00:00">12.00 AM</option>
+                            <option value="00:30">12.30 AM</option>
+                            <option value="01:00">01.00 AM</option>
+                            <option value="01:30">01.30 AM</option>
+                            <option value="02:00">02.00 AM</option>
+                            <option value="02:30">02.30 AM</option>
+                            <option value="03:00">03.00 AM</option>
+                            <option value="03:30">03.30 AM</option>
+                            <option value="04:00">04.00 AM</option>
+                            <option value="04:30">04.30 AM</option>
+                            <option value="05:00">05.00 AM</option>
+                            <option value="05:30">05.30 AM</option>
+                            <option value="06:00">06.00 AM</option>
+                            <option value="06:30">06.30 AM</option>
+                            <option value="07:00">07.00 AM</option>
+                            <option value="07:30">07.30 AM</option>
+                            <option value="08:00">08.00 AM</option>
+                            <option value="08:30">08.30 AM</option>
+                            <option value="09:00">09.00 AM</option>
+                            <option value="09:30">09.30 AM</option>
+                            <option value="10:00">10.00 AM</option>
+                            <option value="10:30">10.30 AM</option>
+                            <option value="11:00">11.00 AM</option>
+                            <option value="11:30">11.30 AM</option>
+                            <option value="12:00">12.00 PM</option>
+                            <option value="12:30">12.30 PM</option>
+                            <option value="13:00">01.00 PM</option>
+                            <option value="13:30">01.30 PM</option>
+                            <option value="14:00">02.00 PM</option>
+                            <option value="14:30">02.30 PM</option>
+                            <option value="15:00">03.00 PM</option>
+                            <option value="15:30">03.30 PM</option>
+                            <option value="16:00">04.00 PM</option>
+                            <option value="16:30">04.30 PM</option>
+                            <option value="17:00">05.00 PM</option>
+                            <option value="17:30">05.30 PM</option>
+                            <option value="18:00" selected="">06.00 PM</option>
+                            <option value="18:30">06.30 PM</option>
+                            <option value="19:00">07.00 PM</option>
+                            <option value="19:30">07.30 PM</option>
+                            <option value="20:00">08.00 PM</option>
+                            <option value="20:30">08.30 PM</option>
+                            <option value="21:00">09.00 PM</option>
+                            <option value="21:30">09.30 PM</option>
+                            <option value="22:00">10.00 PM</option>
+                            <option value="22:30">10.30 PM</option>
+                            <option value="23:00">11.00 PM</option>
+                            <option value="23:30">11.30 PM</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+
+
+            <!-- Text input-->
+
+            <div class="form-group">
+                <label class="col-md-4 control-label">Target Amount</label>
+                <div class="col-md-4 inputGroupContainer">
+                    <div class="input-group">
+                        <span class="input-group-addon"><i class="glyphicon glyphicon-wrench"></i></span>
+                        <input name="target_amount" placeholder="Target Amount" class="form-control" type="text">
+                    </div>
+                </div>
+            </div>
+
+
+            <!-- radio checks
+                <div class="form-group">
+                    <label class="col-md-4 control-label">Do you have hosting?</label>
+                    <div class="col-md-4">
+                        <div class="radio">
+                            <label>
+                                <input type="radio" name="hosting" value="yes" /> Yes
+                            </label>
+                        </div>
+                        <div class="radio">
+                            <label>
+                                <input type="radio" name="hosting" value="no" /> No
+                            </label>
+                        </div>
+                    </div>
+                </div> -->
+
+            <!-- Text area -->
+
+            <!-- <div class="form-group">
+                    <label class="col-md-4 control-label">Project Description</label>
+                    <div class="col-md-4 inputGroupContainer">
+                        <div class="input-group">
+                            <span class="input-group-addon"><i class="glyphicon glyphicon-pencil"></i></span>
+                            <textarea class="form-control" name="comment" placeholder="Project Description"></textarea>
+                        </div>
+                    </div>
+                </div> -->
+
+            <!-- Success message -->
+            <!-- <div class="alert alert-success" role="alert" id="success_message">Success <i
+                        class="glyphicon glyphicon-thumbs-up"></i> Thanks for contacting us, we will get back to you
+                    shortly.</div> -->
+
+            <!-- Button -->
+            <div class="form-group">
+                <label class="col-md-4 control-label"></label>
+                <div class="col-md-4">
+                    <button type="submit" class="btn btn-success" id="startBtn">Start<span
+                            class="glyphicon glyphicon-play"></span></button>
+                    <!-- <button type="submit" class="btn btn-danger" id="stopBtn">Stop<span
+                            class="glyphicon glyphicon-stop"></span></button> -->
+                </div>
+            </div>
+
+        </form>
+    </div>
+    </div><!-- /.container -->
+
+    <script>
+        jQuery(document).ready(function () {
+            var socket = io.connect();
+            var stationForm = $('#station_form');
+            var all = $('.station');
+            var stationName = $('#stationName');
+            var detailForm = $('#detailForm');
+            // var programmer_name = $('#programmer_name');
+
+            detailForm.css('visibility', 'hidden');
+            $('.btn-primary').click((st) => {
+                for (var i = 0; i < all.length; i++) {
+                    $(all[i]).css('visibility', 'hidden');
+                }
+
+                detailForm.css('visibility', 'visible');
+            })
+
+            for (var i = 0; i < all.length; i++) {
+                $(all[i]).submit(function (ass) {
+                    ass.preventDefault();
+                    socket.emit('sending message', $(this).serializeArray());
+                    console.log($(this).serializeArray());
+                });
+            }
+
+            socket.on('new message', (stationData) => {
+                //extract id for submit
+                var id = stationData.stationData[0].value;
+                stationName[0].innerHTML = 'Station ' + id;
+                prepopulateForm(stationData);
+                //button2.css('background', 'red');
+            })
+            function prepopulateForm(stationData) {
+                // $('#programmer_name').val(stationData.stationData[1].value);
+                // $('#operator_name').val(stationData.stationData[2].value);
+                $('#stationId').val(stationData.stationData[0].value);
+            }
+
+            $('#startBtn').click((formData) => {
+                formData.preventDefault();
+                //console.log($('#detailForm').serializeArray());
+                socket.emit('detail form submitted', $('#detailForm').serializeArray());
+
+                for (var i = 0; i < all.length; i++) {
+                    $(all[i]).css('visibility', 'visible');
+                }
+
+                detailForm.css('visibility', 'hidden');
+            })
+
+
+            socket.on('repopulate with submitted data', (submittedData) => {
+                var programmer_name = submittedData.submittedData[0].value;
+                var operator_name = submittedData.submittedData[1].value;
+                var stationId = submittedData.submittedData[2].value;
+                var shift_start = submittedData.submittedData[3].value;
+                var shift_end = submittedData.submittedData[4].value;
+                var target_amount = submittedData.submittedData[5].value;
+
+                //console.log(submittedData);
+                // console.log($(all[submittedData.submittedData[2].value] + ':input'));
+                //('#' + stationId).find('input[name="programmerName"]').val(programmer_name);
+                $('#' + 'pname' + stationId).html(programmer_name);
+                $('#' + 'oname' + stationId).html(operator_name);
+                $('#' + 'status' + stationId).html("Status: Operating");
+                $('#' + stationId).css('background-color', 'lightgreen');
+                $('#' + 'expandBtn' + stationId).css('visibility', 'hidden');
+                //$('#' + 'stopBtn' + stationId).css('visibility', 'visible');
+
+                var timerId = 'timer' + stationId;
+                var timerVar = setInterval(countTimer, 1000);
+                var totalSeconds = 0;
+                function countTimer() {
+                    ++totalSeconds;
+                    var hour = Math.floor(totalSeconds / 3600);
+                    var minute = Math.floor((totalSeconds - hour * 3600) / 60);
+                    var seconds = totalSeconds - (hour * 3600 + minute * 60);
+                    if (hour < 10)
+                        hour = "0" + hour;
+                    if (minute < 10)
+                        minute = "0" + minute;
+                    if (seconds < 10)
+                        seconds = "0" + seconds;
+                    document.getElementById(timerId).innerHTML = hour + ":" + minute + ":" + seconds;
+                }
+
+                // $('#' + 'pname' + stationId).css('background-color', 'pink');
+
+
+            });
+            //            var form = jQuery('form');
+            // var txt = jQuery('#txt');
+            // var chatArea = jQuery('#chatArea');
+            // var button = jQuery('.btn');
+
+            // form.submit(function (e) {
+            //     e.preventDefault();
+            //     socket.emit('sending message', txt.val());
+            //     txt.val('');
+            // })
+
+            // socket.on('new message', function (data) {
+            //     chatArea.append('<div class="well">' + data.message + '</div>');
+            //     button.css('background', 'red');
+            // });
+        });
+
+    </script>
+</body>
+
+</html>
+<!-- <div class="container">
+        <h1 class="jumbotron">
+            NodeJS - Socket.io App Test
+        </h1>
+        <div class="row" style="margin-top: 70px;">
+            <div class="col-md-4"></div>
+            <div class="col-md-6">
+                <div id="chatArea">
+                </div>
+                <form id="myForm">
+                    <div class="form-group">
+                        <textarea rows="5" id="txt" cols="5" class="form-control"></textarea>
+                    </div>
+                    <div class="form-group">
+                        <button type="submit" class="btn1">Send</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div> -->

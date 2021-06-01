@@ -1,0 +1,35 @@
+html, 
+body {
+    height: 100%;
+    background-image: url(photo-1602243002127-99631e9f5acc\ 1.jpg);
+    background-repeat: no-repeat;
+    background-size: cover;
+}
+
+.station {
+    border: 1px solid gray;
+    padding: 35px;
+    width: 23%;
+    margin: 1%;
+    background-color: whitesmoke;
+    border-radius: 7px;
+}
+
+.my-frame {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+
+}
+
+a {
+    color: white;
+}
+
+a:hover{
+    color: whitesmoke;
+}
+
+h1{
+    color: blue;
+}
